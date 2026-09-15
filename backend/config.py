@@ -4,10 +4,11 @@ NUM_VARIANTS = 4
 NUM_VARIANTS_VIDEO = 2
 
 # LLM-related
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", None)
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", None)
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", None) or DEEPSEEK_API_KEY
 ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", None)
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY", None)
-OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", None)
+OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.deepseek.com")
 
 # Image generation (optional)
 REPLICATE_API_KEY = os.environ.get("REPLICATE_API_KEY", None)

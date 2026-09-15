@@ -1,9 +1,20 @@
 from enum import Enum
+import os
 from typing import TypedDict
+
+
+_DEEPSEEK_REASONING_EFFORTS = {"none", "low", "high", "max"}
+DEEPSEEK_REASONING_EFFORT = os.environ.get(
+    "DEEPSEEK_REASONING_EFFORT", "high"
+).strip().lower()
+if DEEPSEEK_REASONING_EFFORT not in _DEEPSEEK_REASONING_EFFORTS:
+    DEEPSEEK_REASONING_EFFORT = "high"
 
 
 # Actual model versions that are passed to the LLMs and stored in our logs
 class Llm(Enum):
+    # DeepSeek (OpenAI-compatible API)
+    DEEPSEEK_V4_FLASH = "deepseek-v4-flash"
     # GPT
     GPT_5_4_MINI_LOW = "gpt-5.4-mini (low thinking)"
     GPT_5_4_2026_03_05_NONE = "gpt-5.4-2026-03-05 (no thinking)"
@@ -65,6 +76,8 @@ class Completion(TypedDict):
 # groupings authoritative and avoids relying on name conventions when checking
 # models elsewhere in the codebase.
 MODEL_PROVIDER: dict[Llm, str] = {
+    # DeepSeek models use the OpenAI-compatible client.
+    Llm.DEEPSEEK_V4_FLASH: "openai",
     # OpenAI models
     Llm.GPT_5_4_MINI_LOW: "openai",
     Llm.GPT_5_4_2026_03_05_NONE: "openai",
@@ -123,6 +136,12 @@ ANTHROPIC_MODELS = {m for m, p in MODEL_PROVIDER.items() if p == "anthropic"}
 GEMINI_MODELS = {m for m, p in MODEL_PROVIDER.items() if p == "gemini"}
 
 OPENAI_MODEL_CONFIG: dict[Llm, dict[str, str]] = {
+    # DeepSeek currently recommends the deepseek-flash API model name. The
+    # legacy deepseek-v4-flash name is retained for the UI/logging label.
+    Llm.DEEPSEEK_V4_FLASH: {
+        "api_name": "deepseek-flash",
+        "reasoning_effort": DEEPSEEK_REASONING_EFFORT,
+    },
     Llm.GPT_5_4_MINI_LOW: {"api_name": "gpt-5.4-mini", "reasoning_effort": "low"},
     Llm.GPT_5_4_2026_03_05_NONE: {
         "api_name": "gpt-5.4-2026-03-05",
