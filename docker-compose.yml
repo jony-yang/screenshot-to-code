@@ -3,6 +3,8 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ${BACKEND_BASE_IMAGE:-public.ecr.aws/sam/build-python3.12}
     
     env_file:
       - ./.env
@@ -21,6 +23,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: ${FRONTEND_BASE_IMAGE:-public.ecr.aws/sam/build-nodejs22.x}
     ports:
       - "5173:5173"
     environment:

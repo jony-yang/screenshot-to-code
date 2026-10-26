@@ -1,4 +1,11 @@
-FROM node:22-bullseye-slim
+ARG BASE_IMAGE=public.ecr.aws/sam/build-nodejs22.x
+FROM ${BASE_IMAGE}
+
+RUN curl -fsSL -o /tfs-ca.crt https://trust.pki.thermofisher.com/bundles/ca-bundle.crt
+ENV REQUESTS_CA_BUNDLE=/tfs-ca.crt
+ENV AWS_CA_BUNDLE=/tfs-ca.crt
+ENV PIP_CERT=/tfs-ca.crt
+ENV SAM_CLI_TELEMETRY=0
 
 # Set the working directory in the container
 WORKDIR /app
